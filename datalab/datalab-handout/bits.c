@@ -235,7 +235,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-    return 2;
+    return (((x) | (~x + 1))>> 31) + 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -250,6 +250,9 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
+
+
+
   return 0;
 }
 //float
@@ -265,8 +268,19 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+    unsigned s = (uf >> 31) & 0x1; //1bit
+    unsigned exp = (uf >> 23) & 0xFF; //8bit
+    unsigned frac = uf & 0x7FFFFF; //23bit
+    if (exp == 0xFF) {
+        return uf;
+    } else if (exp == 0) {
+        frac <<= 1;
+        return (s << 31) | (exp << 23) | frac;
+    } else {
+        return (s << 31) | ((exp + 1) << 23) | frac;
+    }
 }
+
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
  *   for floating point argument f.
@@ -280,7 +294,28 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+    unsigned s = (uf >> 31) & 0x1; //1bit
+    unsigned exp = (uf >> 23) & 0xFF; //8bit
+    unsigned frac = uf & 0x7FFFFF; //23bit
+    int E = exp - 127;
+    frac = frac | (1 << 23); //最高位1
+
+    if (E < 0) {
+        return 0;
+    } else if (E >= 31) {
+        return 0x1 << 31;
+    } else if (E < 23) {
+        // 此时无法完全清除掉frac部分
+        frac = frac >> (23 - E);
+    } else {
+        // 23 <= E < 31
+        frac = frac << (E - 23);
+    }
+
+    if (s) {
+        return ~frac + 1;
+    }
+    return frac;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -296,5 +331,8 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
+
+
+
     return 2;
 }
