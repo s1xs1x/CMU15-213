@@ -34,16 +34,15 @@
 FILE *infile;
 
 int main(int argc, char *argv[])
-{
     char *input;
 
-    /* Note to self: remember to port this bomb to Windows and put a 
+    /* Note to self: remember to port this bomb to Windows and put a
      * fantastic GUI on it. */
 
     /* When run with no arguments, the bomb reads its input lines 
      * from standard input. */
     if (argc == 1) {  
-	infile = stdin;
+	    infile = stdin;
     } 
 
     /* When run with one argument <file>, the bomb reads from <file> 
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
 				      * Let me know how they did it. */
     printf("Phase 1 defused. How about the next one?\n");
 
-    /* The second phase is harder.  No one will ever figure out
+    /* The second phazse is harder.  No one will ever figure out
      * how to defuse this... */
     input = read_line();
     phase_2(input);
